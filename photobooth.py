@@ -250,7 +250,7 @@ for element in loop:
 	open('lastone.txt', 'w').write(filename)
 
 	# post to facebook...
-	postFacebook(filename+'_display'+tone+'.jpg')
+	postFacebook(filename+'_display'+tone+'.jpg', FBpost=True)
 
 	# move files (default) to (redundant) location(s)...
 	if move and not(regenerate):
