@@ -13,16 +13,17 @@ from random import randrange
 import Image, select, v4l2capture
 from StringIO import StringIO
 
+
 # set up serial port for button box and lens light
 # and turn on all three buttons...
 buttonpattern = [0, 1, 2, 4, 2, 1, 0, 4, 2, 1, 0, 1, 2, 4, 0, 2, 5, 2, 5, 7, 0, 7, 0, 7]
 ser = Serial(port = '/dev/ttyACM0')
 ser.write(str(7))
 
-# list with raw image suffixes, used for appending to files as they are created
+# list with raw image file suffixes, used for appending to files as they are created
 suffix = [ 'a', 'b', 'c', 'd' ]
 
-# execute a shell command, printing it to the console for debugging purposes...
+# execute a shell command, printing it to the console for useful for debugging purposes...
 def shellcmd(command):
 	print ' =>', command
 	os.system(command)
@@ -92,16 +93,9 @@ def cleanup_temp_files(filename):
 	# remove temp files...
 	shellcmd('rm *output.jpg done.jpg '+filename+'*done')
 
-# filename function: returns next sequential filename (as a string)
-def new_filename(storename='lastphoto', increment=True):
-	last = eval(open(storename, 'r').read())
-	filename = 'DSC' + (4-len(str(last)))*'0' + str(last)
-	if increment: last=last+1
-	open(storename, 'w').write(str(last))
-	return filename
 
-
-def startvid():			# open the video camera for use...
+# open the USB video camera for use...
+def startvid():			
 	global x, y, video
         video = v4l2capture.Video_device('/dev/video0')
         x, y = video.set_format(1280, 720, fourcc='MJPG')
@@ -110,7 +104,7 @@ def startvid():			# open the video camera for use...
 	video.start()
 
 # function to grab the sequence of raw images. 
-#    copied dummy images to a new 'filename' for testing 
+#    copies dummy images to a new 'filename' for testing 
 #    so that camera does not need to be used...
 def grab_image(filename, i, usecamera=True):
 	# Only capture image if it's one of the four... 
@@ -132,7 +126,7 @@ def grab_image(filename, i, usecamera=True):
 	open(filename+'_'+suffix[i]+'_done', 'w').write('done') 
 
 
-# move files into local subdirectories and SAMBA share at path
+# move files into local subdirectories, SAMBA share, or web root at 'path'
 def move_files(filename, path='/media/PHOTOBOOTH/', copy=True):
       if copy: cmd='cp '
       else: cmd='mv '
@@ -153,6 +147,8 @@ def move_files(filename, path='/media/PHOTOBOOTH/', copy=True):
 	print 'PROBLEMS!!'
 
 
+# Set sizes for screen, camera image and display...
+#  -> here we can account for dissimilar aspect ratios of the images...
 #size = width, height = 960, 540
 #camerasize = camw, camh =  810,540
 size = width, height = 1920, 1080
@@ -167,12 +163,16 @@ cameraloc = (width-camw)/2, (height-camh)/2
 dispsize = disw, dish = 1584, 1080
 disploc = (width-disw)/2, (height-dish)/2
 
+
+# define colors for easy of use with pygame...
 black = (0,0,0)
 white = (255,255,255)
 
+# turn off all lights on button box...
 def lightsoff():
 	ser.write(str(0)) #turn off all lights...
 
+# blink the output connected to the EL wire wrapped around the DSLR lens...
 def blinklenslight():
 	for i in range(5):
 		ser.write(str(8)) # flash lens ring lighjt
@@ -181,6 +181,7 @@ def blinklenslight():
 		time.sleep(0.04)
 	ser.write(str(8))	# leave lens ring light on when done...
 
+# wait for specific key(s) in a list, with a timeout (default is essentially forever)
 def waitforkey(key, quitable = True, timeout = 99999999):
 	# check for button lighting...
 	if len(key)==1: # looking for a specific key, so light just that one...
@@ -217,11 +218,12 @@ def waitforkey(key, quitable = True, timeout = 99999999):
 		return K_t
 	pygame.event.clear()
 
-
+# fill the screen with a solid color...
 def fillscreen(screen, color):
 	screen.fill(color)
 	pygame.display.flip()
 
+# display an image on the screen, given the filename, specified size, and a location (allows centering)
 def displayimage(screen, filename, csize, location=(0,0)):
 		image = pygame.image.load(filename)
 		imagerect = image.get_rect()
@@ -229,6 +231,7 @@ def displayimage(screen, filename, csize, location=(0,0)):
 		screen.blit(image, location)
 		pygame.display.flip()
 
+# an old function to flash text on the screen before taking the photo...
 def flashtext(duration, rate, screen, text, size, location=None):
 	bgwhite = pygame.Surface(screen.get_size())
 	bgblack = pygame.Surface(screen.get_size())
@@ -263,6 +266,7 @@ def flashtext(duration, rate, screen, text, size, location=None):
 		time.sleep(rate/2.)
 
 
+# function to write text on the screen with size and at location...
 def showtext(screen, text, size, location=None):
 	bgwhite = pygame.Surface(screen.get_size())
 	bgwhite = bgwhite.convert()

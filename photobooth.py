@@ -101,7 +101,7 @@ for i in sys.argv:
 	if 'location' in i:
 		location = split(i, '=')[1]
 
-# regenerate all files from raws...
+# regenerate all composite files from raws...
 recurse = False
 loop = xrange(10000) # effectively while(1)...
 if 'recurse' in sys.argv and regenerate:
@@ -122,7 +122,7 @@ if 'recurse' in sys.argv and regenerate:
 # ==================================  MAIN  ==================================
 #=============================================================================
 
-# verify command line args...
+# print command line args to console to verify...
 print 'nousecamera:', repr(camera_arg)
 print 'nomove:', repr(not(move))
 print 'lastphoto:', last
@@ -130,14 +130,18 @@ print 'increment:', repr(increment)
 print 'doubleprint:', repr(doubleprint)
 print 'tone:', repr(default_tone)
 
+# initialize pygame if we're using a display (the default...)
 if display:
 	pygame.init()
 	screen = pygame.display.set_mode(size)
 
+# start the USB video camera...
 startvid()
 
+# this is the main loop...
+#   loop was set up above and unless regenerating composite(s), it's essentially infinite...
 for element in loop:
-	# flush the key queue in the event that someone hit it...
+	# flush the key queue in the event that someone hit a key...
 	# important when looping, not so much the first time into the loop...
 	if display: pygame.event.clear()
 
@@ -179,6 +183,8 @@ for element in loop:
 	print '\r\nnew filename:', filename
 
 	# prime threads for compositing images...
+	#    this was important when processing the 12MPixel images 
+	#    from a DSLR, not so much from the USB webcam.
 	t_ = []
 	t_.append( threading.Thread(target=generate_composite, args=('display'+tone, filename)) )
 	if not(doubleprint): t_.append( threading.Thread(target=generate_composite, args=('phone'+tone, filename)) )
@@ -231,6 +237,7 @@ for element in loop:
 				displayimage(screen, filename+'_display'+tone+'.jpg', dispsize, disploc)
 				disptime = time.time()
 
+	# this delay was thrown in because USB webcam images don't take nearly as long to composite...
 	if time.time() - disptime < 10:
 		time.sleep(10 - (time.time() - disptime) ) 
 
@@ -241,7 +248,7 @@ for element in loop:
 	cleanup_temp_files(filename)
 	open('lastone.txt', 'w').write(filename)
 
-	# move files (default) to redundant locations...
+	# move files (default) to (redundant) location(s)...
 	if move and not(regenerate):
 		move_files(filename, path='/var/www/html/', copy=False)
 
