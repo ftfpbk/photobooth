@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # many dependencies are all brought in with this import...
 from libphotobooth import *
+from libsocialmedia import *
 
 #=============================================================================
 # ========================= COMMAND LINE ARGUMENTS ===========================
@@ -247,6 +248,9 @@ for element in loop:
 	# clean up the temporary files generated during compositing...
 	cleanup_temp_files(filename)
 	open('lastone.txt', 'w').write(filename)
+
+	# post to facebook...
+	postFacebook(filename+'_display'+tone+'.jpg')
 
 	# move files (default) to (redundant) location(s)...
 	if move and not(regenerate):

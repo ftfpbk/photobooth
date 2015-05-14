@@ -111,7 +111,7 @@ def grab_image(filename, i, usecamera=True):
 	if i in range(4): 
 		# grab from camera or make a copy of the dummy images (for testing...)
 		buff = StringIO()	# create StringIO buffer for stashing image data
-		for jj in range(3 ):
+		for jj in range(5 ):
 			select.select((video,), (), ())
 			image_data = video.read_and_queue()	# grab image from camera
 			buff.write(image_data)			# stash in buff
