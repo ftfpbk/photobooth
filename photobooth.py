@@ -249,8 +249,12 @@ for element in loop:
 	cleanup_temp_files(filename)
 	open('lastone.txt', 'w').write(filename)
 
-	# post to facebook...
-	postFacebook(filename+'_display'+tone+'.jpg', FBpost=True)
+	# upload and post to facebook...
+	for i in suffix:
+		socialpost(filename+'_'+i+'.jpg', FBpost=False)
+	socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)
+	if doubleprint: socialpost(filename+'_print'+tone+'.jpg', FBpost=False)
+	socialpost(filename+'_display'+tone+'.jpg', FBpost=True)
 
 	# move files (default) to (redundant) location(s)...
 	if move and not(regenerate):

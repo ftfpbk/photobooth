@@ -3,7 +3,7 @@ import ftplib
 import os
 from credentials import *
 
-def postFacebook(filename, FBpost=False):
+def socialpost(filename, FBpost=False):
     # upload the file to an xternal web server...
     session = ftplib.FTP(ftphost, ftpname, ftppass)
     imagefile = open(filename, 'rb')
