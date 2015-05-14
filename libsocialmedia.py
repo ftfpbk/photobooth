@@ -5,6 +5,7 @@ from credentials import *
 
 def socialpost(filename, FBpost=False):
     # upload the file to an xternal web server...
+    print 'Uplading', filename, 'to', ftphost
     session = ftplib.FTP(ftphost, ftpname, ftppass)
     imagefile = open(filename, 'rb')
     session.storbinary('STOR '+filename, imagefile)
@@ -12,6 +13,7 @@ def socialpost(filename, FBpost=False):
     session.quit()
 
     if FBpost:
+       print 'Posting', filename, 'to Facebook...'
        # send email trigger to IFTTT with link to image we just uploaded...
        server = smtplib.SMTP_SSL(smtphost, 465) # use SSL...
        server.ehlo()

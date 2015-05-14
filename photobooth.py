@@ -250,10 +250,12 @@ for element in loop:
 	open('lastone.txt', 'w').write(filename)
 
 	# upload and post to facebook...
-	for i in suffix:
-		socialpost(filename+'_'+i+'.jpg', FBpost=False)
-	socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)
-	if doubleprint: socialpost(filename+'_print'+tone+'.jpg', FBpost=False)
+	uploadall = True
+	if uploadall = True:
+		for i in suffix:
+			socialpost(filename+'_'+i+'.jpg', FBpost=False)
+		socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)
+		if doubleprint: socialpost(filename+'_print'+tone+'.jpg', FBpost=False)
 	socialpost(filename+'_display'+tone+'.jpg', FBpost=True)
 
 	# move files (default) to (redundant) location(s)...
