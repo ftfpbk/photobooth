@@ -183,6 +183,7 @@ def blinklenslight():
 
 # wait for specific key(s) in a list, with a timeout (default is essentially forever)
 def waitforkey(key, quitable = True, timeout = 99999999):
+	pygame.event.clear()
 	# check for button lighting...
 	if len(key)==1: # looking for a specific key, so light just that one...
 		ser.write(str(0))

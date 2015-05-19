@@ -251,7 +251,7 @@ for element in loop:
 
 	# upload and post to facebook...
 	uploadall = True
-	if uploadall = True:
+	if uploadall == True:
 		for i in suffix:
 			socialpost(filename+'_'+i+'.jpg', FBpost=False)
 		socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)
