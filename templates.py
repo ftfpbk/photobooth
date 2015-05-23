@@ -42,7 +42,7 @@ templates = {'display':[ ['504x336', '+12+12', 'images/backscreen-hd.jpg', 'bout
 			['504x336', '+540+373', 'boutput.jpg', 'boutput.jpg'],
 			['+411+243', 'x233', 'images/overlay-disp.png', 'boutput.jpg'], 
 			'gm composite -resize &ARG1 -geometry &ARG2 &FILENAME_&I.jpg &ARG3 -quality 98 &ARG4 ',
-			'gm convert -font Courier -pointsize 20 -fill black -draw "text 1070,365 &FILENAME" boutput.jpg boutput.jpg; gm composite -geometry &ARG1 -resize &ARG2 &ARG3 &ARG4 -quality 95 &FILENAME_&TEMPLATE.jpg '
+			'gm convert -font Courier -pointsize 20 -fill black -draw "text 12,365 &FILENAME" boutput.jpg boutput.jpg; gm composite -geometry &ARG1 -resize &ARG2 &ARG3 &ARG4 -quality 95 &FILENAME_&TEMPLATE.jpg '
 			],
 
 

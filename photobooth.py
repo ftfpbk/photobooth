@@ -167,6 +167,7 @@ for element in loop:
 		time.sleep(3.5)
 		fillscreen(screen, black)
 		displayimage(screen, 'images/pushbuttontocontinue.jpg', scrsize, scrloc)
+		print 'Push button to continue...'
 		keylist = [K_r, K_g, K_y]
 		key = waitforkey(keylist, timeout=13)
 		if key == K_t: continue	
