@@ -112,6 +112,7 @@ def grab_image(filename, i, usecamera=True):
 		# grab from camera or make a copy of the dummy images (for testing...)
 		buff = StringIO()	# create StringIO buffer for stashing image data
 		for jj in range(5 ):
+			if jj==4: shellcmd('mpg123 -a hw:2,0 beep.mp3 &')
 			select.select((video,), (), ())
 			image_data = video.read_and_queue()	# grab image from camera
 			buff.write(image_data)			# stash in buff

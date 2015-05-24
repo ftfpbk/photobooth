@@ -52,7 +52,7 @@ templates = {'display':[ ['504x336', '+12+12', 'images/backscreen-hd.jpg', 'bout
 			['878x582', '+61+2376', 'output.jpg', 'output.jpg'],
 			['+125+25', '750x', 'images/overlay-phone.png', 'output.jpg'], 
 			'gm composite -resize &ARG1 -geometry &ARG2 &FILENAME_&I.jpg &ARG3 -quality 98 &ARG4 ',
-			'gm convert -font Courier -pointsize 30 -fill black -draw "text 61,485 &FILENAME" output.jpg output.jpg; gm composite -geometry &ARG1 -resize &ARG2 &ARG3 &ARG4 -quality 95 &FILENAME_&TEMPLATE.jpg '
+			'gm convert -font Courier -pointsize 30 -fill black -draw "text 61,485 &FILENAME" -draw "text 270,1110 HappyCamperPhotoBooth.com" output.jpg output.jpg; gm composite -geometry &ARG1 -resize &ARG2 &ARG3 &ARG4 -quality 95 &FILENAME_&TEMPLATE.jpg '
 			],
 
 	'display-2x3':[ ['504x336', '+12+12', 'images/backscreen-hd.jpg', 'boutput.jpg'],

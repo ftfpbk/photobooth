@@ -164,12 +164,12 @@ for element in loop:
 	if display:
 		fillscreen(screen, black)
 		displayimage(screen, 'images/fourphotostaken.jpg', scrsize, scrloc)
-		time.sleep(3.5)
+		time.sleep(2.0)
 		fillscreen(screen, black)
 		displayimage(screen, 'images/pushbuttontocontinue.jpg', scrsize, scrloc)
 		print 'Push button to continue...'
 		keylist = [K_r, K_g, K_y]
-		key = waitforkey(keylist, timeout=13)
+		key = waitforkey(keylist, timeout=35)
 		if key == K_t: continue	
 		fillscreen(screen, black)
 
@@ -199,7 +199,7 @@ for element in loop:
 		if display:
 			#showtext(screen, 'Image: '+str(i+1), 100)
 			displayimage(screen, 'images/image'+str(i+1)+'.jpg', scrsize, scrloc)
-			#time.sleep(0.75)
+			time.sleep(2.0)
 			blinklenslight()
 		print 
 		print 'Grabbing image: ', i+1
