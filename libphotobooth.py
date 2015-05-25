@@ -34,6 +34,7 @@ def new_filename(storename='lastphoto', increment=True):
 	filename = 'DSC' + (4-len(str(last)))*'0' + str(last)
 	if increment: last=last+1
 	open(storename, 'w').write(str(last))
+	open('/home/debian/photobooth/lastphoto','w').write(str(last))
 	return filename
 
 

@@ -84,10 +84,13 @@ if not(lastphoto):
 	# this should be rolled into the filename function but for now it's here...
 	last = eval(open('lastphoto', 'r').read())
 	print 'Change current photo number '+str(last)+'?'
-	temp = raw_input( 'Enter valid new number or nothing to keep: ')
+	#temp = raw_input( 'Enter valid new number or nothing to keep: ')
+	temp = str(last+1)
+	print "Using lastphoto..." , temp
 if temp not in ['']: 
-	last = eval(temp) 
+	last = eval(temp)
 	open('lastphoto', 'w').write(str(last))
+	open('/home/debian/photobooth/lastphoto','w').write(str(last))
 
 # increment output photo index? default is true...
 increment=True
@@ -199,6 +202,7 @@ for element in loop:
 		if display:
 			#showtext(screen, 'Image: '+str(i+1), 100)
 			displayimage(screen, 'images/image'+str(i+1)+'.jpg', scrsize, scrloc)
+			shellcmd('mpg123 -a hw:2,0 saycheese.mp3 &')
 			time.sleep(2.0)
 			blinklenslight()
 		print 
