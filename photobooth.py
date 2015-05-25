@@ -85,7 +85,7 @@ if not(lastphoto):
 	last = eval(open('lastphoto', 'r').read())
 	print 'Change current photo number '+str(last)+'?'
 	#temp = raw_input( 'Enter valid new number or nothing to keep: ')
-	temp = str(last+1)
+	temp = str(last)
 	print "Using lastphoto..." , temp
 if temp not in ['']: 
 	last = eval(temp)
@@ -256,12 +256,34 @@ for element in loop:
 
 	# upload and post to facebook...
 	uploadall = True
+        # start the queued threads...
 	if uploadall == True:
+		# create threaded queuefor uploading...
+	        u_ = []
+		print 
+		print 'Queuing uploads...'
 		for i in suffix:
-			socialpost(filename+'_'+i+'.jpg', FBpost=False)
-		socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)
-		if doubleprint: socialpost(filename+'_print'+tone+'.jpg', FBpost=False)
-	socialpost(filename+'_display'+tone+'.jpg', FBpost=True)
+			#socialpost(filename+'_'+i+'.jpg', FBpost=False)
+			u_.append( threading.Thread(target=socialpost, args=(filename+'_'+i+'.jpg', False)) )
+		#socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)
+		u_.append( threading.Thread(target=socialpost, args=(filename+'_phone'+tone+'.jpg', False)) )
+		#if doubleprint: socialpost(filename+'_print'+tone+'.jpg', FBpost=False)
+		if doubleprint: u_.append( threading.Thread(target=socialpost, args=(filename+'_print'+tone+'.jpg', False)) )
+		#socialpost(filename+'_display'+tone+'.jpg', FBpost=True)
+		u_.append( threading.Thread(target=socialpost, args=(filename+'_display'+tone+'.jpg', True)) )
+		# start all items in the queue...
+        	for i in u_: i.start()
+		# now wait for all of them to finish...
+		print 'Now wait for uploads to finish...'
+		living = True
+		while (living):
+			living = False
+			for i in u_:
+                        	if i.isAlive(): living=True
+			time.sleep(0.25)
+		print 'Uploading done...'
+		print
+
 
 	# move files (default) to (redundant) location(s)...
 	if move and not(regenerate):
