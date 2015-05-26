@@ -34,6 +34,7 @@ def new_filename(storename='lastphoto', increment=True):
 	filename = 'DSC' + (4-len(str(last)))*'0' + str(last)
 	if increment: last=last+1
 	open(storename, 'w').write(str(last))
+	open('/home/debian/photobooth/lastphoto','w').write(str(last))
 	return filename
 
 
@@ -112,6 +113,7 @@ def grab_image(filename, i, usecamera=True):
 		# grab from camera or make a copy of the dummy images (for testing...)
 		buff = StringIO()	# create StringIO buffer for stashing image data
 		for jj in range(5 ):
+			if jj==4: shellcmd('mpg123 -a hw:2,0 beep.mp3 &')
 			select.select((video,), (), ())
 			image_data = video.read_and_queue()	# grab image from camera
 			buff.write(image_data)			# stash in buff
