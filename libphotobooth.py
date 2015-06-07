@@ -127,6 +127,30 @@ def grab_image(filename, i, usecamera=True):
 	#shellcmd('gm convert -shave 100x0 '+filename+'_'+suffix[i]+'.jpg '+filename+'_'+suffix[i]+'.jpg')
 	open(filename+'_'+suffix[i]+'_done', 'w').write('done') 
 
+def preview_image(screen, i, usecamera=True):
+	buff = StringIO()
+	for jj in xrange(i): # i number of frames to preview...
+             select.select((video,), (), ())
+             image_data = video.read_and_queue()     # grab image from camera
+             buff.write(image_data)                  # stash in buff
+             buff.seek(0)                            # reset file pointer to zero...
+             im = Image.open(buff)                   # read image from buff
+             buff.seek(0)
+             mode = im.mode                          # pull relevant info from image for pygame
+             ix, iy = im.size
+             im.crop( (100, 0, ix-100, iy) )
+             imsz = im.size # crop 1080x720 
+             data = im.tostring()
+             image = pygame.image.fromstring(data, imsz, mode) # read image into pygame...
+             imagerect = image.get_rect()                      # and display it...
+             sx, sy = scrsize   # locate the image in the center of the screen...
+             ix, iy = imsz
+             loc = ( int((sx-ix)/2.), int((sy-iy)/2.) )
+             screen.blit(image, loc)
+             pygame.display.flip()
+             if jj==1: print sx, sy, ix, iy, loc 
+
+
 
 # move files into local subdirectories, SAMBA share, or web root at 'path'
 def move_files(filename, path='/media/PHOTOBOOTH/', copy=True):

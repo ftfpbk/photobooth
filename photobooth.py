@@ -142,6 +142,10 @@ if display:
 # start the USB video camera...
 startvid()
 
+for i in range(60):
+    preview_image(screen, 1)
+#preview_image(screen, 30)
+
 # this is the main loop...
 #   loop was set up above and unless regenerating composite(s), it's essentially infinite...
 for element in loop:
