@@ -104,51 +104,51 @@ def startvid():
         video.queue_all_buffers()
 	video.start()
 
+# grab a frame frome the camera, crop, and return it...
+def grab_vid_frame():
+	buff = StringIO()
+        select.select((video,), (), ())
+        image_data = video.read_and_queue()     # grab image from camera
+        buff.write(image_data)                  # stash in buff
+        buff.seek(0)                            # reset file pointer to zero...
+        im = Image.open(buff)                   # read image from buff
+        ix, iy = im.size
+        return(im.crop( (100, 0, ix-100, iy) ) )
+
 # function to grab the sequence of raw images. 
 #    copies dummy images to a new 'filename' for testing 
 #    so that camera does not need to be used...
 def grab_image(filename, i, usecamera=True):
-	# Only capture image if it's one of the four... 
-	if i in range(4): 
-		# grab from camera or make a copy of the dummy images (for testing...)
-		buff = StringIO()	# create StringIO buffer for stashing image data
-		for jj in range(5 ):
-			if jj==4: shellcmd('mpg123 -a hw:2,0 beep.mp3 &')
-			select.select((video,), (), ())
-			image_data = video.read_and_queue()	# grab image from camera
-			buff.write(image_data)			# stash in buff
-			buff.seek(0)				# reset file pointer to zero...
-			im = Image.open(buff)			# read image from buff
-			buff.seek(0)
-		ix, iy = im.size
-		im.crop( (100, 0, ix-100, iy) ).resize( (1620, 1080), Image.ANTIALIAS ).save(filename+'_'+suffix[i]+'.jpg')
+	# grab from camera or make a copy of the dummy images (for testing...)
+	print i
+	im = grab_vid_frame()
+	ix, iy = im.size
+	print ix, iy
+	#im.resize( (1620, 1080), Image.ANTIALIAS )
+	im.save(filename+'_'+suffix[i]+'.jpg')
 
 	# create flag file indicating that photo file download from camera completed...
 	#shellcmd('gm convert -shave 100x0 '+filename+'_'+suffix[i]+'.jpg '+filename+'_'+suffix[i]+'.jpg')
 	open(filename+'_'+suffix[i]+'_done', 'w').write('done') 
 
-def preview_image(screen, i, usecamera=True):
-	buff = StringIO()
-	for jj in xrange(i): # i number of frames to preview...
-             select.select((video,), (), ())
-             image_data = video.read_and_queue()     # grab image from camera
-             buff.write(image_data)                  # stash in buff
-             buff.seek(0)                            # reset file pointer to zero...
-             im = Image.open(buff)                   # read image from buff
-             buff.seek(0)
-             mode = im.mode                          # pull relevant info from image for pygame
-             ix, iy = im.size
-             im.crop( (100, 0, ix-100, iy) )
-             imsz = im.size # crop 1080x720 
-             data = im.tostring()
-             image = pygame.image.fromstring(data, imsz, mode) # read image into pygame...
+def preview_image(screen, i, usecamera=True, progressbar=True):
+	pygame.draw.rect( screen, (255, 200, 200), (0, 0, 1920, 100), 0 )
+	for peek in xrange(i): # i number of frames to preview...
+             im = grab_vid_frame()
+             image = pygame.image.fromstring(im.tostring(), im.size, im.mode) # read image into pygame...
              imagerect = image.get_rect()                      # and display it...
              sx, sy = scrsize   # locate the image in the center of the screen...
-             ix, iy = imsz
-             loc = ( int((sx-ix)/2.), int((sy-iy)/2.) )
+             ix, iy = im.size
+             #loc = ( int((sx-ix)/2.), int((sy-iy)/2.) )
+             loc = ( int((sx-ix)/2.), 100 )
+             # flipi the image horizontally to make preview like a mirror...
+             # but it's very wierd... so commenting it out for the moment.
+             # image = pygame.transform.flip(image, True, False)
              screen.blit(image, loc)
+             pygame.draw.rect( screen, (0, 0, 0), (peek*960/i, 0, 100, 100), 0 )
+             pygame.draw.rect( screen, (0, 0, 0), (1820-peek*960/i, 0, 100, 100), 0 )
              pygame.display.flip()
-             if jj==1: print sx, sy, ix, iy, loc 
+             if peek==1: print 'preview_image:', sx, sy, ix, iy, loc 
 
 
 

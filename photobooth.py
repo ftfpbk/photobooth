@@ -138,12 +138,13 @@ print 'tone:', repr(default_tone)
 if display:
 	pygame.init()
 	screen = pygame.display.set_mode(size)
+	pygame.mouse.set_visible(False)
 
 # start the USB video camera...
 startvid()
 
-for i in range(60):
-    preview_image(screen, 1)
+#for i in range(60):
+#    preview_image(screen, 1)
 #preview_image(screen, 30)
 
 # this is the main loop...
@@ -171,7 +172,7 @@ for element in loop:
 	if display:
 		fillscreen(screen, black)
 		displayimage(screen, 'images/fourphotostaken.jpg', scrsize, scrloc)
-		time.sleep(2.0)
+		time.sleep(1.7)
 		fillscreen(screen, black)
 		displayimage(screen, 'images/pushbuttontocontinue.jpg', scrsize, scrloc)
 		print 'Push button to continue...'
@@ -206,14 +207,13 @@ for element in loop:
 		if display:
 			#showtext(screen, 'Image: '+str(i+1), 100)
 			displayimage(screen, 'images/image'+str(i+1)+'.jpg', scrsize, scrloc)
-			shellcmd('mpg123 -a hw:2,0 saycheese.mp3 &')
-			time.sleep(2.0)
-			blinklenslight()
+			time.sleep(1.5)
 		print 
 		print 'Grabbing image: ', i+1
 		if display: fillscreen(screen, black)
 		if not(regenerate): 
 			# get image from camera...
+			preview_image(screen, 20)
 			grab_image(filename, i, camera_arg)
 		else:
 			# if regenerate, copy from location the appropriate raw image...
@@ -221,7 +221,6 @@ for element in loop:
 			print 'Copying:', location + filename+'_'+suffix[i] + '.jpg'
 			shellcmd('cp ' + location + 'raw-images/' + filename+'_'+suffix[i] + '.jpg' + ' .')
 			open(filename+'_'+suffix[i]+'_done', 'w').write('done') 
-		lightsoff() # turn off lens ring light...
 		if display: displayimage(screen, filename+'_'+suffix[i]+'.jpg', camerasize, cameraloc)
 		print 'time to display:', time.time()-start
 		if display: time.sleep(3)
