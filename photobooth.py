@@ -144,15 +144,16 @@ if display:
 startvid()
 
 key = ''
-keylist = [K_g, K_r, K_s, K_b, K_c, K_q]
+keylist = [K_g, K_r, K_s, K_b, K_c ]
+adminkey = [K_r, K_s, K_b, K_c]
 while(key not in keylist):
 	preview_image(screen, 1, progressbar=False, text='Aim camera')
-	keylist = [K_g, K_r, K_s, K_b, K_c]
 	key = waitforkey(keylist,  timeout=1)
 	print key
 
 # this is the main loop...
 #   loop was set up above and unless regenerating composite(s), it's essentially infinite...
+tone = default_tone # holdover from the attempt at toning the images... not sure if can be deleted yet
 for element in loop:
 	# flush the key queue in the event that someone hit a key...
 	# important when looping, not so much the first time into the loop...
@@ -165,13 +166,35 @@ for element in loop:
 		else:	
 			displayimage(screen, 'images/pushtostart.jpg', scrsize, scrloc)
 
-		key = waitforkey([K_g, K_r, K_y])	
-	if default_tone=='':
-		if key == K_y: tone='-sepia'
-		if key == K_r: tone='-bw'
-		if key == K_g: tone =''
-	else:
-		tone=default_tone
+		key = waitforkey(keylist)	
+		if key in adminkey:
+			print 'Admin key!!  - Do something here...'
+			if key == K_r: # RED admin button
+				# What happens here:
+				# display shutdown notice on screen, issue command to remote display to 
+				# shutdown, sleep to wait for it to  be received, delete the command for
+				# the remote display so it does not shutdown on rebooting, and then signal
+				# our own shutdown...
+				showtext(screen, 'Shutting down...', 100)
+				open('/var/www/html/command.txt','w').write('shutdown')
+				time.sleep(20)
+				shellcmd('touch /home/debian/shutdown')
+				open('/var/www/html/command.txt','w').write('')
+				time.sleep(120)
+			if key == K_c: # YELLOW admin button
+                                # What happens here:
+                                # display reboot notice on screen, issue command to remote display to 
+                                # reboot, sleep to wait for it to  be received, delete the command for
+                                # the remote display so it does not reboot on rebooting, and then signal
+                                # our own reboot...
+                                showtext(screen, 'Rebooting system...', 100)
+                                open('/var/www/html/command.txt','w').write('reboot')
+                                time.sleep(20)
+                                shellcmd('touch /home/debian/reboot')
+                                open('/var/www/html/command.txt','w').write('')
+                                time.sleep(120)
+
+			continue
 
 	if display:
 		fillscreen(screen, black)
@@ -180,8 +203,7 @@ for element in loop:
 		fillscreen(screen, black)
 		displayimage(screen, 'images/pushbuttontocontinue.jpg', scrsize, scrloc)
 		print 'Push button to continue...'
-		keylist = [K_r, K_g, K_y]
-		key = waitforkey(keylist, timeout=35)
+		key = waitforkey(keylist, timeout=25)
 		if key == K_t: continue	
 		fillscreen(screen, black)
 		flashtext(3, .75, screen, "Go stand by the wall", 100)
