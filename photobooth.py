@@ -180,6 +180,7 @@ for element in loop:
 		key = waitforkey(keylist, timeout=35)
 		if key == K_t: continue	
 		fillscreen(screen, black)
+		flashtext(3, .75, screen, "Go stand by the wall", 100)
 
 	# keep track of the starting time for some statistics...
 	start = time.time()
