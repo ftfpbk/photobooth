@@ -131,8 +131,8 @@ def grab_image(filename, i, usecamera=True):
 	#shellcmd('gm convert -shave 100x0 '+filename+'_'+suffix[i]+'.jpg '+filename+'_'+suffix[i]+'.jpg')
 	open(filename+'_'+suffix[i]+'_done', 'w').write('done') 
 
-def preview_image(screen, i, usecamera=True, progressbar=True):
-	pygame.draw.rect( screen, (255, 200, 200), (0, 0, 1920, 100), 0 )
+def preview_image(screen, i, usecamera=True, progressbar=True, text=None):
+	if progressbar: pygame.draw.rect( screen, (255, 200, 200), (0, 0, 1920, 100), 0 )
 	for peek in xrange(i): # i number of frames to preview...
              im = grab_vid_frame()
              image = pygame.image.fromstring(im.tostring(), im.size, im.mode) # read image into pygame...
@@ -141,14 +141,17 @@ def preview_image(screen, i, usecamera=True, progressbar=True):
              ix, iy = im.size
              #loc = ( int((sx-ix)/2.), int((sy-iy)/2.) )
              loc = ( int((sx-ix)/2.), 100 )
-             # flipi the image horizontally to make preview like a mirror...
+             # flip the image horizontally to make preview like a mirror...
              # but it's very wierd... so commenting it out for the moment.
              # image = pygame.transform.flip(image, True, False)
              screen.blit(image, loc)
-             pygame.draw.rect( screen, (0, 0, 0), (peek*960/i, 0, 100, 100), 0 )
-             pygame.draw.rect( screen, (0, 0, 0), (1820-peek*960/i, 0, 100, 100), 0 )
+             if progressbar:
+                pygame.draw.rect( screen, (0, 0, 0), (peek*960/i, 0, 100, 100), 0 )
+                pygame.draw.rect( screen, (0, 0, 0), (1820-peek*960/i, 0, 100, 100), 0 )
              pygame.display.flip()
              if peek==1: print 'preview_image:', sx, sy, ix, iy, loc 
+
+             if text: showtext(screen, text, 100, (900, 900), flip=False )
 
 
 
@@ -294,10 +297,10 @@ def flashtext(duration, rate, screen, text, size, location=None):
 
 
 # function to write text on the screen with size and at location...
-def showtext(screen, text, size, location=None):
+def showtext(screen, text, size, location=None, flip=True):
 	bgwhite = pygame.Surface(screen.get_size())
 	bgwhite = bgwhite.convert()
-	bgwhite.fill(black)#white)
+	if flip: bgwhite.fill(black)#white)
 	
 	fontname = pygame.font.match_font('freeserif')
 	font = pygame.font.Font(fontname, size)
@@ -314,7 +317,7 @@ def showtext(screen, text, size, location=None):
 	bgwhite.blit(textb, textbpos)
 
 	screen.blit(bgwhite, (0,0))
-	pygame.display.flip()
+	if flip: pygame.display.flip()
 
 
 

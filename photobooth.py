@@ -143,9 +143,13 @@ if display:
 # start the USB video camera...
 startvid()
 
-#for i in range(60):
-#    preview_image(screen, 1)
-#preview_image(screen, 30)
+key = ''
+keylist = [K_g, K_r, K_s, K_b, K_c, K_q]
+while(key not in keylist):
+	preview_image(screen, 1, progressbar=False, text='Aim camera')
+	keylist = [K_g, K_r, K_s, K_b, K_c]
+	key = waitforkey(keylist,  timeout=1)
+	print key
 
 # this is the main loop...
 #   loop was set up above and unless regenerating composite(s), it's essentially infinite...
