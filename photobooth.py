@@ -2,6 +2,7 @@
 # many dependencies are all brought in with this import...
 from libphotobooth import *
 from libsocialmedia import *
+from commands import getoutput
 
 #=============================================================================
 # ========================= COMMAND LINE ARGUMENTS ===========================
@@ -149,7 +150,7 @@ adminkey = [K_r, K_s, K_b, K_c]
 while(key not in keylist):
 	preview_image(screen, 1, progressbar=False, text='Aim camera')
 	key = waitforkey(keylist,  timeout=1)
-	print key
+	#print key
 
 # this is the main loop...
 #   loop was set up above and unless regenerating composite(s), it's essentially infinite...
@@ -193,7 +194,18 @@ for element in loop:
                                 shellcmd('touch /home/debian/reboot')
                                 open('/var/www/html/command.txt','w').write('')
                                 time.sleep(120)
-
+			if key == K_b: # Blue admin button: re-aim camera
+				key = '' # clear key so we can actually enter the loop...
+				while(key not in keylist):
+					preview_image(screen, 1, progressbar=False, text='Aim camera')
+					key = waitforkey(keylist,  timeout=1)
+			if key == K_s: # Green admin button: restart the script w/o reboot
+				procs = getoutput('ps u')
+				procs = split(procs, '\n')
+				for i in procs:
+					if 'debian' in i and 'tty1' in i and '-bash' in i:
+						proc = split(i)[1]
+						shellcmd('kill -9 ' + proc)
 			continue
 
 	if display:
