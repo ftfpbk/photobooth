@@ -309,6 +309,7 @@ for element in loop:
 		print 
 		print 'Queuing uploads...'
 
+		# for now, only the uploading of the display images will occur...
 		# raw image...	
 		#for i in suffix:
 			#socialpost(filename+'_'+i+'.jpg', FBpost=False)
