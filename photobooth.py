@@ -151,6 +151,7 @@ while(key not in keylist):
 	preview_image(screen, 1, progressbar=False, text='Aim camera')
 	key = waitforkey(keylist,  timeout=1)
 	#print key
+upload2FB = False
 
 # this is the main loop...
 #   loop was set up above and unless regenerating composite(s), it's essentially infinite...
@@ -199,17 +200,27 @@ for element in loop:
 				while(key not in keylist):
 					preview_image(screen, 1, progressbar=False, text='Aim camera')
 					key = waitforkey(keylist,  timeout=1)
-			if key == K_s: # Green admin button: restart the script w/o reboot
+			if key == K_s: # Green admin button: toggle upload to FB, default is off at start
+				if upload2FB:
+					upload2FB = False
+					showtext(screen, 'No uploading to Facebook.', 100)
+					time.sleep(5)
+				else: 
+					upload2FB = True
+					showtext(screen, 'Live uploading to Facebook.', 100)
+					time.sleep(5)
+			
+				# WAS: restart the script w/o reboot
 				# we do this by killing the process logged into tty1
 				# Since autlogin is enabled for tty1, and .profile launches the 
 				# photo booth script, killing the initial login process will 
 				# restart the photo booth script over. Not very elegant but it does work...
-				procs = getoutput('ps u')
-				procs = split(procs, '\n')
-				for i in procs:
-					if 'debian' in i and 'tty1' in i and '-bash' in i:
-						proc = split(i)[1]
-						shellcmd('kill -9 ' + proc)
+				#procs = getoutput('ps u')
+				#procs = split(procs, '\n')
+				#for i in procs:
+				#	if 'debian' in i and 'tty1' in i and '-bash' in i:
+				#		proc = split(i)[1]
+				#		shellcmd('kill -9 ' + proc)
 			continue
 
 	if display:
@@ -323,7 +334,7 @@ for element in loop:
 
 		# display (horizontal composite)
 		#socialpost(filename+'_display'+tone+'.jpg', FBpost=True)
-		u_.append( threading.Thread(target=socialpost, args=(filename+'_display'+tone+'.jpg', True)) )
+		u_.append( threading.Thread(target=socialpost, args=(filename+'_display'+tone+'.jpg', upload2FB)) )
 
 		# start all items in the queue...
         	for i in u_: i.start()
