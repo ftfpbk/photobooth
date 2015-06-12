@@ -200,6 +200,10 @@ for element in loop:
 					preview_image(screen, 1, progressbar=False, text='Aim camera')
 					key = waitforkey(keylist,  timeout=1)
 			if key == K_s: # Green admin button: restart the script w/o reboot
+				# we do this by killing the process logged into tty1
+				# Since autlogin is enabled for tty1, and .profile launches the 
+				# photo booth script, killing the initial login process will 
+				# restart the photo booth script over. Not very elegant but it does work...
 				procs = getoutput('ps u')
 				procs = split(procs, '\n')
 				for i in procs:
@@ -304,15 +308,22 @@ for element in loop:
 	        u_ = []
 		print 
 		print 'Queuing uploads...'
-		for i in suffix:
+
+		# raw image...	
+		#for i in suffix:
 			#socialpost(filename+'_'+i+'.jpg', FBpost=False)
-			u_.append( threading.Thread(target=socialpost, args=(filename+'_'+i+'.jpg', False)) )
+		#	u_.append( threading.Thread(target=socialpost, args=(filename+'_'+i+'.jpg', False)) )
+
+		# print strip (single and double)
 		#socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)
-		u_.append( threading.Thread(target=socialpost, args=(filename+'_phone'+tone+'.jpg', False)) )
+		#u_.append( threading.Thread(target=socialpost, args=(filename+'_phone'+tone+'.jpg', False)) )
 		#if doubleprint: socialpost(filename+'_print'+tone+'.jpg', FBpost=False)
-		if doubleprint: u_.append( threading.Thread(target=socialpost, args=(filename+'_print'+tone+'.jpg', False)) )
+		#if doubleprint: u_.append( threading.Thread(target=socialpost, args=(filename+'_print'+tone+'.jpg', False)) )
+
+		# display (horizontal composite)
 		#socialpost(filename+'_display'+tone+'.jpg', FBpost=True)
 		u_.append( threading.Thread(target=socialpost, args=(filename+'_display'+tone+'.jpg', True)) )
+
 		# start all items in the queue...
         	for i in u_: i.start()
 		# now wait for all of them to finish...
