@@ -144,6 +144,9 @@ if display:
 # start the USB video camera...
 startvid()
 
+# change last one so that a promo PNG plays first when slideshow starts up...
+open('lastone.txt', 'w').write('Alady')
+
 key = ''
 keylist = [K_g, K_r, K_s, K_b, K_c ]
 adminkey = [K_r, K_s, K_b, K_c]
@@ -201,14 +204,18 @@ for element in loop:
 					preview_image(screen, 1, progressbar=False, text='Aim camera')
 					key = waitforkey(keylist,  timeout=1)
 			if key == K_s: # Green admin button: toggle upload to FB, default is off at start
+				open('/var/www/html/command.txt','w').write('clearcache')
+				open('lastone.txt', 'w').write('Alady')
 				if upload2FB:
 					upload2FB = False
-					showtext(screen, 'No uploading to Facebook.', 100)
+					showtext(screen, 'FB uploading off. Please wait...', 100)
 					time.sleep(5)
 				else: 
 					upload2FB = True
-					showtext(screen, 'Live uploading to Facebook.', 100)
+					showtext(screen, 'Live FB uploading. Please wait...', 100)
 					time.sleep(5)
+				time.sleep(5)
+                                open('/var/www/html/command.txt','w').write('')
 			
 				# WAS: restart the script w/o reboot
 				# we do this by killing the process logged into tty1
