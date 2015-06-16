@@ -185,7 +185,7 @@ for element in loop:
 				time.sleep(20)
 				shellcmd('touch /home/debian/shutdown')
 				open('/var/www/html/command.txt','w').write('')
-				time.sleep(120)
+				time.sleep(30)
 			if key == K_c: # YELLOW admin button
                                 # What happens here:
                                 # display reboot notice on screen, issue command to remote display to 
@@ -197,7 +197,7 @@ for element in loop:
                                 time.sleep(20)
                                 shellcmd('touch /home/debian/reboot')
                                 open('/var/www/html/command.txt','w').write('')
-                                time.sleep(120)
+                                time.sleep(30)
 			if key == K_b: # Blue admin button: re-aim camera
 				key = '' # clear key so we can actually enter the loop...
 				while(key not in keylist):

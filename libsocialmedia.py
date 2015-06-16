@@ -19,7 +19,8 @@ def socialpost(filename, FBpost=False):
        server.ehlo()
        server.login(smtpname, smtppass)
        FROM = smtpname
-       TO = ['trigger@recipe.ifttt.com'] #must be a list
+#       TO = ['trigger@recipe.ifttt.com'] #must be a list
+       TO = ['laurenpercy@freescale.com'] #must be a list
        SUBJECT = "#FTF2015selfie" # hashtag trigger for IFTTT...
        TEXT = webhost + filename
 
