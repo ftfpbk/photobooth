@@ -327,11 +327,11 @@ for element in loop:
 		print 
 		print 'Queuing uploads...'
 
-		# for now, only the uploading of the display images will occur...
+		# for now, only the uploading of the display and raw images will occur...
 		# raw image...	
-		#for i in suffix:
-			#socialpost(filename+'_'+i+'.jpg', FBpost=False)
-		#	u_.append( threading.Thread(target=socialpost, args=(filename+'_'+i+'.jpg', False)) )
+		for i in suffix:
+			socialpost(filename+'_'+i+'.jpg', FBpost=False)
+			u_.append( threading.Thread(target=socialpost, args=(filename+'_'+i+'.jpg', False)) )
 
 		# print strip (single and double)
 		#socialpost(filename+'_phone'+tone+'.jpg', FBpost=False)

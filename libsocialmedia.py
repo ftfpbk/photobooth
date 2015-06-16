@@ -8,7 +8,12 @@ def socialpost(filename, FBpost=False):
     print 'Uplading', filename, 'to', ftphost
     session = ftplib.FTP(ftphost, ftpname, ftppass)
     imagefile = open(filename, 'rb')
-    session.storbinary('STOR '+filename, imagefile)
+    if 'display' not in filename and ( '_a.jpg' in filename or '_b.jpg' in filename or '_c.jpg' in filename or '_d.jpg'):
+        # change directory if these are the raw images...
+        session.cwd('raw-images')
+        session.storbinary('STOR '+filename, imagefile)
+    else:
+        session.storbinary('STOR '+filename, imagefile)
     imagefile.close()
     session.quit()
 

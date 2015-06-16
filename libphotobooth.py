@@ -132,7 +132,7 @@ def grab_image(filename, i, usecamera=True):
 	open(filename+'_'+suffix[i]+'_done', 'w').write('done') 
 
 def preview_image(screen, i, usecamera=True, progressbar=True, text=None):
-	if progressbar: pygame.draw.rect( screen, (255, 200, 200), (0, 0, 1920, 100), 0 )
+	if progressbar: pygame.draw.rect( screen, (255, 255, 255), (0, 0, 1920, 100), 0 )
 	for peek in xrange(i): # i number of frames to preview...
              im = grab_vid_frame()
              image = pygame.image.fromstring(im.tostring(), im.size, im.mode) # read image into pygame...
